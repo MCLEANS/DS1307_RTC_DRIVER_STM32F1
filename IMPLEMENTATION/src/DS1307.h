@@ -8,12 +8,37 @@
 #ifndef DS1307_H_
 #define DS1307_H_
 
+#include "I2C.h"
+
 namespace custom_libraries {
 
-class DS1307 {
+#define BUFFER_SIZE 7
+#define RTC_ADDRESS 0xD0
+
+struct RTC_Time{
 public:
-	DS1307();
-	virtual ~DS1307();
+	uint8_t second;
+	uint8_t minute;
+	uint8_t hour;
+	uint8_t day;
+	uint8_t date;
+	uint8_t month;
+	uint8_t year;
+};
+
+class DS1307 : public I2C_{
+private:
+	uint8_t buffer[BUFFER_SIZE];
+private:
+public:
+public:
+	DS1307(I2C_TypeDef *_I2C,
+			GPIO_TypeDef *GPIO,
+			uint8_t SDA,
+			uint8_t SCL);
+	RTC_Time get_time();
+	void set_time(RTC_Time rtc_time);
+	~DS1307();
 };
 
 } /* namespace custom_libraries */
