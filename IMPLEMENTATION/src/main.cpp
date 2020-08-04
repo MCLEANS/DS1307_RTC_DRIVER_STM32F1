@@ -45,11 +45,34 @@ RTC_Time get_time(){
 	rtc_time.month = i2c.BCD_to_decimal(buffer[5]);
 	rtc_time.year = i2c.BCD_to_decimal(buffer[6]);
 
-	return RTC_Time;
+	return rtc_time;
+}
+
+void set_time(RTC_Time rtc_time){
+	uint8_t set_buffer[BUFFER_SIZE];
+
+	set_buffer[0] = i2c.decimal_to_BCD(rtc_time.second);
+	set_buffer[1] = i2c.decimal_to_BCD(rtc_time.minute);
+	set_buffer[2] = i2c.decimal_to_BCD(rtc_time.hour);
+	set_buffer[3] = i2c.decimal_to_BCD(rtc_time.day);
+	set_buffer[4] = i2c.decimal_to_BCD(rtc_time.date);
+	set_buffer[5] = i2c.decimal_to_BCD(rtc_time.month);
+	set_buffer[6] = i2c.decimal_to_BCD(rtc_time.year);
+
+	i2c.write_bytes(RTC_ADDRESS,0x00,set_buffer,BUFFER_SIZE);
 }
 
 int main(void)
 {
+	rtc_time.second = 0;
+	rtc_time.minute = 45;
+	rtc_time.hour = 15;
+	rtc_time.day = 2;
+	rtc_time.date = 4;
+	rtc_time.month = 8;
+	rtc_time.year = 20;
+
+	set_time(rtc_time);
 
 	while(1){
 
